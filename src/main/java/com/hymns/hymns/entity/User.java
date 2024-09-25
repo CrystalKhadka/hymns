@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
 
 
 @Table(name = "users")
@@ -44,11 +45,11 @@ public class User implements UserDetails {
     private String role;
 
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return null;
     }
+
 
     @Override
     public String getPassword() {
