@@ -37,7 +37,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> login(@RequestBody UserDto userRequest) {
+    public ResponseEntity<Map<String, Object>> login(@RequestBody UserDto userRequest) {
         if (userRequest == null) {
             return new ResponseEntity<>(Map.of("error", "Please provide user details"), HttpStatus.BAD_REQUEST);
         }
@@ -46,18 +46,11 @@ public class UserController {
             return new ResponseEntity<>(Map.of("error", "Please provide email and password"), HttpStatus.BAD_REQUEST);
         }
 
-        // Call login service and get token
-        String token;
-        try {
-            token = userService.login(userRequest);
-        } catch (Exception e) {
-            return new ResponseEntity<>(Map.of("error", e.getMessage()), HttpStatus.UNAUTHORIZED);
-        }
 
         // Return success response with token
         return new ResponseEntity<>(Map.of(
                 "message", "User logged in successfully",
-                "token", token
+                "user", userService.login(userRequest)
         ), HttpStatus.OK);
     }
 }

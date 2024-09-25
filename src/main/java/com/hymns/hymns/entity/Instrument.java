@@ -41,4 +41,6 @@ public class Instrument {
 
     @Column(name = "instrument_condition")
     private String instrumentCondition;
+
+    private boolean added;
 }

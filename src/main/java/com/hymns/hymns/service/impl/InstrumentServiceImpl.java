@@ -20,7 +20,7 @@ import java.util.List;
 public class InstrumentServiceImpl implements InstrumentService {
 
     private final InstrumentRepo instrumentRepo;
-    private final String uploadDirectory = System.getProperty("user.dir") + "/instrument_images";
+    private final String uploadDirectory = System.getProperty("user.dir") + "/src/main/resources/static/images";
 
     @Override
     public void addInstrument(InstrumentDto dto) {
@@ -32,6 +32,9 @@ public class InstrumentServiceImpl implements InstrumentService {
             instrument.setInstrumentCondition(dto.getInstrumentCondition());
             instrument.setInstrumentRentalStatus("available");
             instrument.setInstrumentImage(dto.getInstrumentImage());
+
+            instrument.setAdded(!dto.isAddedByUser());
+
             instrumentRepo.save(instrument);
 
         } catch (Exception e) {
@@ -72,7 +75,7 @@ public class InstrumentServiceImpl implements InstrumentService {
 
     @Override
     public List<InstrumentDto> getAllInstruments() {
-        List<Instrument> instruments = instrumentRepo.findAll();
+        List<Instrument> instruments = instrumentRepo.getAddedInstruments();
 //        instruments into dto
 
         return instruments.stream().map(
@@ -104,4 +107,35 @@ public class InstrumentServiceImpl implements InstrumentService {
                 .instrumentImage(instrument.getInstrumentImage())
                 .build();
     }
+
+    @Override
+    public List<InstrumentDto> getUserInstruments() {
+        List<Instrument> instruments = instrumentRepo.getNotAddedInstruments();
+//        instruments into dto
+
+        return instruments.stream().map(
+                instrument -> InstrumentDto.builder()
+                        .instrumentId(instrument.getInstrumentId())
+                        .instrumentName(instrument.getInstrumentName())
+                        .instrumentType(instrument.getInstrumentType())
+                        .instrumentRentalPrice(instrument.getInstrumentRentalPrice())
+                        .instrumentCondition(instrument.getInstrumentCondition())
+                        .instrumentRentalStatus(instrument.getInstrumentRentalStatus())
+                        .instrumentImage(instrument.getInstrumentImage())
+                        .build()
+        ).toList();
+    }
+
+    @Override
+    public void changeAdded(int id) {
+        Instrument instrument = instrumentRepo.findById(id).orElseThrow(
+                () -> new RuntimeException("Instrument not found"
+                ));
+
+        instrument.setAdded(!instrument.isAdded());
+        instrumentRepo.save(instrument);
+
+    }
+
+
 }

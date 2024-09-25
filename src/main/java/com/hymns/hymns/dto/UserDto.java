@@ -1,15 +1,14 @@
 package com.hymns.hymns.dto;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.hymns.hymns.entity.User;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 public class UserDto {
 
     private int id;
@@ -19,4 +18,17 @@ public class UserDto {
     private String password;
     private String username;
     private String role;
+
+    //    to dto
+    public static UserDto toDto(User user) {
+        return UserDto.builder()
+                .id(user.getId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .password(user.getPassword())
+                .username(user.getUsername())
+                .role(user.getRole())
+                .build();
+    }
 }

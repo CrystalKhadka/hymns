@@ -5,15 +5,15 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
+
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
-
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
 
 @Service
 public class JWTService {
@@ -24,6 +24,7 @@ public class JWTService {
     private long jwtExpiration;
 
     public String extractUsername(String token) {
+        token = token.replaceAll("\\s+", ""); // Removes any spaces, new lines, or tabs
         return extractClaim(token, Claims::getSubject);
     }
 
@@ -42,6 +43,11 @@ public class JWTService {
 
     public long getExpirationTime() {
         return jwtExpiration;
+    }
+
+    public String getEmailFromToken(String token) {
+        System.out.println("Token: " + token);
+        return extractUsername(token);
     }
 
     private String buildToken(
@@ -85,4 +91,6 @@ public class JWTService {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
+
+
 }

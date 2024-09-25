@@ -10,5 +10,5 @@ public interface RentalService {
 
     List<RentalDto> getAllRentals();
 
-    List<RentalDto> getAllRentalsByUser(String token);
+    List<RentalDto> getAllRentalsByUser(int id);
 }

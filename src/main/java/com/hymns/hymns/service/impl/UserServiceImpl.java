@@ -57,7 +57,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String login(UserDto userDto) {
+    public UserDto login(UserDto userDto) {
         try {
             // Check if user exists by email
             User user = userRepo.findByActiveEmail(userDto.getEmail()).orElseThrow(() -> new RuntimeException("User not found"));
@@ -71,7 +71,13 @@ public class UserServiceImpl implements UserService {
 
             // generate token and return to user
 //            use jwt token
-            return jwtService.generateToken(user);
+            return UserDto.builder()
+                    .id(user.getId())
+                    .email(user.getEmail())
+                    .firstName(user.getFirstName())
+                    .lastName(user.getLastName())
+                    .username(user.getUsername())
+                    .build();
 
 
         } catch (RuntimeException e) {

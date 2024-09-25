@@ -38,4 +38,8 @@ public class Rental {
 
     private Date returnDate;
 
+    @Column(name = "status", columnDefinition = "varchar(255) default 'pending'")
+    private String status;
+
+
 }

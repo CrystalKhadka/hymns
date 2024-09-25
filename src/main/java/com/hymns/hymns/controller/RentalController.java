@@ -18,7 +18,7 @@ public class RentalController {
     private final RentalService rentalService;
 
     @PostMapping("/rent")
-    public ResponseEntity<Map<String, String>> rentInstrument(@RequestBody RentalDto rentalDto) {
+    public ResponseEntity<Map<String, String>> rentInstrument(@RequestBody RentalDto rentalDto, @RequestHeader("Authorization") String token) {
         try {
             rentalService.rentInstrument(rentalDto);
             return ResponseEntity.ok(Map.of("message", "Instrument rented successfully"));
@@ -28,20 +28,20 @@ public class RentalController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<Map<String, String>> getAllRentals() {
+    public ResponseEntity<Map<String, Object>> getAllRentals() {
         try {
             List<RentalDto> rentals = rentalService.getAllRentals();
-            return ResponseEntity.ok(Map.of("rentals", rentals.toString()));
+            return ResponseEntity.ok(Map.of("rentals", rentals));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 
-    @GetMapping("/user")
-    public ResponseEntity<Map<String, String>> getAllRentalsByUser(@RequestHeader("Authorization") String token) {
+    @GetMapping("/user/{id}")
+    public ResponseEntity<Map<String, Object>> getAllRentalsByUser(@PathVariable int id) {
         try {
-            List<RentalDto> rentals = rentalService.getAllRentalsByUser(token);
-            return ResponseEntity.ok(Map.of("rentals", rentals.toString()));
+            List<RentalDto> rentals = rentalService.getAllRentalsByUser(id);
+            return ResponseEntity.ok(Map.of("rentals", rentals));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }

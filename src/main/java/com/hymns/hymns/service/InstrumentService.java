@@ -15,4 +15,8 @@ public interface InstrumentService {
     List<InstrumentDto> getAllInstruments();
 
     InstrumentDto getInstrument(int id);
+
+    List<InstrumentDto> getUserInstruments();
+
+    void changeAdded(int id);
 }

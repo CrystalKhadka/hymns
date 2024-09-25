@@ -46,9 +46,7 @@ public class InstrumentController {
     @PostMapping(value = "/save", consumes = "multipart/form-data")
     public ResponseEntity<Map<String, String>> save(@RequestPart(required = false) MultipartFile file) {
         try {
-            if (file == null) {
-                return new ResponseEntity<>(Map.of("message", "Please provide user details", "success", "false"), HttpStatus.BAD_REQUEST);
-            }
+
             if (file.isEmpty()) {
                 return new ResponseEntity<>(Map.of("message", "Please provide all required instrument details", "success", "false"), HttpStatus.BAD_REQUEST);
             }
@@ -76,6 +74,35 @@ public class InstrumentController {
                     "message", "All instruments fetched successfully",
                     "success", "true",
                     "instruments", instrumentService.getAllInstruments()
+            ), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(Map.of("error", e.getMessage()), HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @GetMapping("/added")
+    public ResponseEntity<Map<String, Object>> getUserAdded() {
+        try {
+            // Call get service and get token
+            return new ResponseEntity<>(Map.of(
+                    "message", "All instruments fetched successfully",
+                    "success", "true",
+                    "instruments", instrumentService.getUserInstruments()
+            ), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(Map.of("error", e.getMessage()), HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @PutMapping("/change/{id}")
+    public ResponseEntity<Map<String, Object>> change(@PathVariable int id) {
+        try {
+            instrumentService.changeAdded(id);
+            // Call get service and get token
+            return new ResponseEntity<>(Map.of(
+                    "message", "Instrument fetched successfully",
+                    "success", "true",
+                    "instrument", instrumentService.getInstrument(id)
             ), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(Map.of("error", e.getMessage()), HttpStatus.UNAUTHORIZED);
