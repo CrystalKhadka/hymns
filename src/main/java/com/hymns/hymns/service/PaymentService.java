@@ -17,4 +17,6 @@ public interface PaymentService {
     void changeStatus(int id);
 
     String khaltiPayment(Payment payment) throws Exception;
+
+    PaymentDto verifyPayment(String token, int id) throws Exception;
 }
