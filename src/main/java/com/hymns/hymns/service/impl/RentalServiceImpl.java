@@ -25,7 +25,7 @@ public class RentalServiceImpl implements RentalService {
     private final InstrumentRepo instrumentRepo;
 
     @Override
-    public void rentInstrument(RentalDto rentalDto) {
+    public RentalDto rentInstrument(RentalDto rentalDto) {
         try {
             Rental rental = new Rental();
 
@@ -45,9 +45,22 @@ public class RentalServiceImpl implements RentalService {
             instrument.setInstrumentRentalStatus("Rented");
             instrumentRepo.save(instrument);
             rentalRepo.save(rental);
+
+            return (
+                    RentalDto.builder()
+                            .id(rental.getId())
+                            .rentalDate(rental.getRentalDate())
+                            .returnDate(rental.getReturnDate())
+                            .status(rental.getStatus())
+                            .instrument(InstrumentDto.toDto(rental.getInstrument()))
+                            .user(UserDto.toDto(rental.getUser()))
+                            .build()
+            );
+
         } catch (Exception e) {
             throw new RuntimeException("Error while renting instrument: " + e.getMessage());
         }
+
     }
 
     @Override
@@ -83,5 +96,22 @@ public class RentalServiceImpl implements RentalService {
             rentalDto.setUser(UserDto.toDto(rental.getUser()));
             return rentalDto;
         }).toList();
+    }
+
+    @Override
+    public void returnInstrument(int id) {
+        try {
+            Rental rental = rentalRepo.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Rental not found"));
+
+            rental.setStatus("Returned");
+            rentalRepo.save(rental);
+
+            Instrument instrument = rental.getInstrument();
+            instrument.setInstrumentRentalStatus("Available");
+            instrumentRepo.save(instrument);
+        } catch (Exception e) {
+            throw new RuntimeException("Error while returning instrument: " + e.getMessage());
+        }
     }
 }

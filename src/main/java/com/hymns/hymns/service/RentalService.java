@@ -6,9 +6,11 @@ import java.util.List;
 
 public interface RentalService {
 
-    void rentInstrument(RentalDto rentalDto);
+    RentalDto rentInstrument(RentalDto rentalDto);
 
     List<RentalDto> getAllRentals();
 
     List<RentalDto> getAllRentalsByUser(int id);
+
+    void returnInstrument(int id);
 }
