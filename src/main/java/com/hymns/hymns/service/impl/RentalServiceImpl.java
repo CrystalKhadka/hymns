@@ -114,4 +114,9 @@ public class RentalServiceImpl implements RentalService {
             throw new RuntimeException("Error while returning instrument: " + e.getMessage());
         }
     }
+
+    @Override
+    public List<Rental> getActiveRentals() {
+        return rentalRepo.findAllByStatus("Pending");
+    }
 }

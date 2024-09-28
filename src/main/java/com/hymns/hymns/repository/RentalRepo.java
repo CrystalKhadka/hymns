@@ -12,4 +12,7 @@ import java.util.List;
 public interface RentalRepo extends JpaRepository<Rental, Integer> {
     @Query("SELECT r FROM Rental r WHERE r.user = ?1")
     List<Rental> findAllByUser(User user);
+
+    @Query("SELECT r FROM Rental r WHERE r.status = ?1")
+    List<Rental> findAllByStatus(String pending);
 }
